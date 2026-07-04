@@ -1,0 +1,13 @@
+zara01:
+  dir: "../OpenTraj/datasets/UCY/zara01"
+  obsmat: "obsmat.txt"
+  homography: "H.txt"
+  video: "video.avi"
+  swap_px_output: true # projection yields (row, col); swap to (col, row) for OpenCV
+
+eth:
+  dir: "../OpenTraj/datasets/ETH/seq_eth"
+  obsmat: "obsmat.txt"
+  homography: "H.txt"
+  video: "video.avi"
+  swap_px_output: true # same (row, col) convention as UCY, verified by overlay

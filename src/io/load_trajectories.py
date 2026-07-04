@@ -1,16 +1,20 @@
-"""Загрузка ETH/UCY obsmat.txt в канонический формат.
+"""Load ETH/UCY obsmat.txt files into the canonical trajectory format.
 
-Канонический формат (одинаковый для всех датасетов):
+Canonical format (identical across all datasets):
     scene_id, frame, timestamp, person_id, x_m, y_m, source
-Всё в метрах на плоскости земли. source='gt' для ground-truth аннотаций.
+All coordinates are in meters on the ground plane.
+source='gt' marks ground-truth annotations (vs. 'tracked' later on).
 """
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
-# obsmat: frame, ped_id, pos_x, pos_z, pos_y, v_x, v_z, v_y
-# Плоскость земли — это pos_x и pos_y. pos_z (высота) отбрасывается.
-FPS = 2.5  # аннотации на 2.5 Гц, шаг 0.4 с
+# obsmat columns: frame, ped_id, pos_x, pos_z, pos_y, v_x, v_z, v_y
+# Ground plane is (pos_x, pos_y); pos_z is height and gets dropped.
+
+ANNOTATION_DT = 0.4  # annotations are sampled at 2.5 Hz
+
 
 def load_obsmat(obsmat_path: str | Path, scene_id: str) -> pd.DataFrame:
     path = Path(obsmat_path)
@@ -23,16 +27,16 @@ def load_obsmat(obsmat_path: str | Path, scene_id: str) -> pd.DataFrame:
         "y_m": raw[:, 4],
         "source": "gt",
     })
-        # шаг аннотации = 0.4 с; шаг кадров разный по сценам (ETH: 6, UCY: 10),
-    # поэтому выводим его из данных, а не хардкодим
+    # Annotation step is 0.4 s, but the frame step differs per scene
+    # (ETH: 6, UCY: 10), so infer it from the data instead of hardcoding.
     frame0 = df["frame"].min()
     frame_step = int(np.diff(np.unique(df["frame"])).min())
-    df["timestamp"] = (df["frame"] - frame0) / frame_step * 0.4
+    df["timestamp"] = (df["frame"] - frame0) / frame_step * ANNOTATION_DT
     return df[["scene_id", "frame", "timestamp", "person_id", "x_m", "y_m", "source"]]
 
 
 def load_homography(h_path: str | Path) -> np.ndarray:
-    """H переводит пиксели -> метры. H_inv (обратная) переводит метры -> пиксели."""
+    """H maps pixels -> meters. Use its inverse for meters -> pixels."""
     return np.loadtxt(h_path)
 
 
@@ -40,7 +44,7 @@ if __name__ == "__main__":
     root = Path("../OpenTraj/datasets")
     eth = load_obsmat(root / "ETH/seq_eth/obsmat.txt", "eth")
     zara = load_obsmat(root / "UCY/zara01/obsmat.txt", "zara01")
-    print("ETH:", eth.shape, "| людей:", eth.person_id.nunique())
+    print("ETH:", eth.shape, "| persons:", eth.person_id.nunique())
     print(eth.head())
-    print("\nZara01:", zara.shape, "| людей:", zara.person_id.nunique())
+    print("\nZara01:", zara.shape, "| persons:", zara.person_id.nunique())
     print(zara.head())
