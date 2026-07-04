@@ -5,4 +5,4 @@ data/raw/
 data/processed/
 outputs/
 .ipynb_checkpoints/
-.DS_Store
+.DS_Store*.pt
