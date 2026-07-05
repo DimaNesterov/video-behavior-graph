@@ -42,3 +42,31 @@
 - Primary camera: \_\_\_
 - Backup camera: \_\_\_
 - Rationale: \_\_\_
+
+## Pixel-to-world projection and GT comparison (zara01, commit 48c0adc)
+
+Pipeline: yolo11s + TTA (native 640) -> ByteTrack (custom thresholds) ->
+phantom filter (min 25 frames, min 30 px displacement) -> foot-point
+projection through H -> rolling smoothing (5 frames) -> resampling onto
+the 0.4 s annotation grid.
+
+Results vs manual GT annotations:
+
+- 229 tracks survive filtering (148 people in GT; fragmentation expected)
+- Coverage: 67.9% of GT observations matched within 1.0 m on the same frame
+- Position error on matches: mean 0.33 m, median 0.25 m
+- Valid 8+12 windows (8 s of unbroken track required): 331 tracked vs 2234 GT (15%)
+
+Interpretation:
+
+- Median error of 0.25 m is within a step width; part of it is GT click
+  noise itself. The meters pipeline (foot point + homography) is sound.
+- The window deficit is driven by track fragmentation: average track length
+  is ~3.3 s vs the 8 s a window requires. Known cause: occlusion-driven ID
+  switches; ByteTrack has no appearance re-ID. Parked as a known limitation --
+  training uses GT trajectories, tracked windows serve the end-to-end demo.
+- Context from literature: the trajectory-prediction community does not run
+  detection on ETH/UCY videos at all (GT annotations are used directly); the
+  one published attempt we found (FairMOT on ETH/UCY, 2025) also reported
+  frequent misses on this footage. 480/576p interlaced PAL from 2009 is
+  near worst-case input for modern detectors.
