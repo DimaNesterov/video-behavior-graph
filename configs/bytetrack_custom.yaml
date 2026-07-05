@@ -1,0 +1,10 @@
+# ByteTrack tuned for low-contrast, low-res footage (ETH/UCY era video).
+# Key change: new_track_thresh lowered from 0.6 -- people in shadows never
+# exceed 0.6 confidence, so with the default they never spawn a track at all.
+tracker_type: bytetrack
+track_high_thresh: 0.3 # first-stage association (default 0.5)
+track_low_thresh: 0.05 # second-stage: keep very weak detections in play
+new_track_thresh: 0.25 # birth threshold (default 0.6 -- the bottleneck)
+track_buffer: 60 # keep lost tracks alive ~2.4 s at 25 fps (default 30)
+match_thresh: 0.8
+fuse_score: True
