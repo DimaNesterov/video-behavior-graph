@@ -4,6 +4,7 @@ zara01:
   homography: "H.txt"
   video: "video.avi"
   swap_px_output: true # projection yields (row, col); swap to (col, row) for OpenCV
+  flip_px_x: false
 
 eth:
   dir: "../OpenTraj/datasets/ETH/seq_eth"
@@ -11,3 +12,28 @@ eth:
   homography: "H.txt"
   video: "video.avi"
   swap_px_output: true # same (row, col) convention as UCY, verified by overlay
+  flip_px_x: false
+
+zara02:
+  dir: "../OpenTraj/datasets/UCY/zara02"
+  obsmat: "obsmat.txt"
+  homography: "H.txt"
+  video: "video.avi"
+  swap_px_output: true
+  flip_px_x: true
+
+hotel:
+  dir: "../OpenTraj/datasets/ETH/seq_hotel"
+  obsmat: "obsmat.txt"
+  homography: "H.txt"
+  video: "video.avi"
+  swap_px_output: true # hypothesis (both verified scenes were true) -- verify with overlay
+  flip_px_x: false
+
+univ:
+  dir: "../OpenTraj/datasets/UCY/students03"
+  obsmat: "obsmat.txt"
+  homography: "H-old.txt" # obsmat was generated with H-old, not the current H.txt (verified numerically)
+  video: "video.avi"
+  swap_px_output: true # same (row, col) convention as other UCY scenes
+  flip_px_x: false

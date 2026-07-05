@@ -18,19 +18,23 @@ from src.io.load_trajectories import load_obsmat, load_homography
 CONFIG = Path("configs/scenes.yaml")
 
 
-def world_to_image(xy_m: np.ndarray, H: np.ndarray, swap_output: bool) -> np.ndarray:
+def world_to_image(xy_m: np.ndarray, H: np.ndarray, swap_output: bool,
+                   flip_x: bool = False, frame_w: int | None = None) -> np.ndarray:
     """Project world coordinates (meters) to image pixels.
 
     H maps pixels -> meters, so we use its inverse.
-    Some scenes (UCY) yield (row, col) order; swap_output flips it to
-    (col, row) as expected by OpenCV drawing functions.
+    swap_output: some scenes yield (row, col); swap to (col, row) for OpenCV.
+    flip_x: some scenes (zara02) define H with a negated x-axis; mirror back.
     """
     H_inv = np.linalg.inv(H)
-    pts = np.hstack([xy_m, np.ones((len(xy_m), 1))])  # to homogeneous
+    pts = np.hstack([xy_m, np.ones((len(xy_m), 1))])
     px = (H_inv @ pts.T).T
-    px = px[:, :2] / px[:, 2:3]  # normalize
+    px = px[:, :2] / px[:, 2:3]
     if swap_output:
         px = px[:, [1, 0]]
+    if flip_x:
+        assert frame_w is not None, "flip_x requires frame width"
+        px[:, 0] = frame_w + px[:, 0]  # x is negative: shift back into [0, w]
     return px
 
 
@@ -53,7 +57,8 @@ def main(scene_id: str):
     rng = np.random.default_rng(0)
     for _, traj in df.groupby("person_id"):
         color = tuple(int(c) for c in rng.integers(60, 255, 3))
-        px = world_to_image(traj[["x_m", "y_m"]].to_numpy(), H, cfg["swap_px_output"])
+        px = world_to_image(traj[["x_m", "y_m"]].to_numpy(), H,
+                            cfg["swap_px_output"], cfg.get("flip_px_x", False), w)
         pts = px.astype(int)
         # drop points outside the frame
         pts = pts[(pts[:, 0] >= 0) & (pts[:, 0] < w) & (pts[:, 1] >= 0) & (pts[:, 1] < h)]

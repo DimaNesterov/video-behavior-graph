@@ -27,8 +27,12 @@ def load_obsmat(obsmat_path: str | Path, scene_id: str) -> pd.DataFrame:
         "y_m": raw[:, 4],
         "source": "gt",
     })
-    # Annotation step is 0.4 s, but the frame step differs per scene
-    # (ETH: 6, UCY: 10), so infer it from the data instead of hardcoding.
+    # NOTE (verified numerically): biwi_eth_10fps.txt == the standard benchmark
+    # file (Trajectron++/Social-GAN) and is a linear interpolation of obsmat
+    # onto a 10-frame grid; its real timestep is 0.4*10/6 ~= 0.667 s, though
+    # the community treats it as 0.4 s. Hence published ETH numbers reflect a
+    # ~8 s effective horizon and are NOT comparable to obsmat-based results.
+    # Use obsmat for features (true 0.4 s), benchmark splits for Phase 3 eval.
     frame0 = df["frame"].min()
     frame_step = int(np.diff(np.unique(df["frame"])).min())
     df["timestamp"] = (df["frame"] - frame0) / frame_step * ANNOTATION_DT
