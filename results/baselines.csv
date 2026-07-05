@@ -1,0 +1,6 @@
+date,commit,model,scene,windows,obs_len,pred_len,ade,fde
+2026-07-05,9c07f37,const_velocity,zara01,2234,8,12,0.58,1.19
+2026-07-05,9c07f37,const_velocity,eth,2614,8,12,0.577,1.163
+2026-07-05,9c07f37,const_velocity,zara02,5741,8,12,0.437,0.89
+2026-07-05,9c07f37,const_velocity,hotel,1197,8,12,0.246,0.466
+2026-07-05,9c07f37,const_velocity,univ,14029,8,12,0.631,1.238
