@@ -5,6 +5,8 @@ zara01:
   video: "video.avi"
   swap_px_output: true # projection yields (row, col); swap to (col, row) for OpenCV
   flip_px_x: false
+  object_prompt: ["shop window", "door", "car", "tree", "trash bin"]
+  footage_note: "blurry low-resolution interlaced CCTV-style footage from 2009"
 
 eth:
   dir: "../OpenTraj/datasets/ETH/seq_eth"
@@ -13,6 +15,7 @@ eth:
   video: "video.avi"
   swap_px_output: true # same (row, col) convention as UCY, verified by overlay
   flip_px_x: false
+  footage_note: "blurry low-resolution aerial-view footage from 2009"
 
 zara02:
   dir: "../OpenTraj/datasets/UCY/zara02"
@@ -21,14 +24,16 @@ zara02:
   video: "video.avi"
   swap_px_output: true
   flip_px_x: true
+  footage_note: "blurry low-resolution interlaced CCTV-style footage from 2009"
 
 hotel:
   dir: "../OpenTraj/datasets/ETH/seq_hotel"
   obsmat: "obsmat.txt"
   homography: "H.txt"
   video: "video.avi"
-  swap_px_output: true # hypothesis (both verified scenes were true) -- verify with overlay
+  swap_px_output: true # verified by overlay
   flip_px_x: false
+  footage_note: "blurry low-resolution aerial-view footage from 2009"
 
 univ:
   dir: "../OpenTraj/datasets/UCY/students03"
@@ -37,3 +42,4 @@ univ:
   video: "video.avi"
   swap_px_output: true # same (row, col) convention as other UCY scenes
   flip_px_x: false
+  footage_note: "blurry low-resolution footage of a crowded campus plaza from 2009"

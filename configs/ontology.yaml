@@ -1,0 +1,39 @@
+object_types:
+  # openings / access
+  - door
+  - doorway
+  - entrance
+  - gate
+  - turnstile
+  - staircase
+  - escalator
+  - elevator
+  # street / outdoor
+  - shop window
+  - bench
+  - bus shelter
+  - bus stop
+  - crosswalk
+  - streetlight
+  - bollard
+  - fence
+  - planter
+  - fountain
+  - statue
+  - kiosk
+  - bicycle rack
+  - awning
+  - tree
+  - car
+  - trash bin
+  - sign
+  # indoor / furniture
+  - table
+  - chair
+  - sofa
+  - counter
+  - shelf
+  - display
+  - information desk
+  - barrier
+  - wall
