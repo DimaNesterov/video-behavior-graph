@@ -1,0 +1,9 @@
+[
+  {
+    "id": "manual_00",
+    "type": "shop window",
+    "bbox": [0, 11, 460, 246],
+    "confidence": 1.0,
+    "source": "manual"
+  }
+]

@@ -21,6 +21,8 @@ class ZoneNode(BaseModel):
 class EntryExitNode(BaseModel):
     id: str
     type: str                 # entry_exit
+    subtype: str = "boundary_exit"   # boundary_exit | building_entry
+    linked_object: str | None = None
     location_m: list[float]
     usage_frequency: float
 

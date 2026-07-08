@@ -37,6 +37,11 @@ def main(scene_id: str):
 
     objects_raw = json.loads(Path(
         f"data/processed/objects_{scene_id}_verified.json").read_text(encoding="utf-8"))
+    manual_path = Path(f"data/manual/{scene_id}_objects.json")
+    if manual_path.exists():
+        manual = json.loads(manual_path.read_text(encoding="utf-8"))
+        objects_raw += manual
+        print(f"Manual overlay: +{len(manual)} objects")
     entries_raw = json.loads(Path(
         f"data/processed/entries_{scene_id}.json").read_text(encoding="utf-8"))
     z = np.load(f"data/processed/zones_{scene_id}.npz")
@@ -69,6 +74,8 @@ def main(scene_id: str):
     # Entry/exit nodes
     for en in entries_raw:
         node = EntryExitNode(id=en["id"], type="entry_exit",
+                             subtype=en.get("subtype", "boundary_exit"),
+                             linked_object=en.get("linked_object"),
                              location_m=en["location_m"],
                              usage_frequency=en["usage_frequency"])
         G.add_node(node.id, **node.model_dump())
